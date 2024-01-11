@@ -129,9 +129,7 @@ def validate_ruff_installation() -> None:
         raise typer.Exit(1) from e
 
     try:
-        version = Version(
-            ruff_version_process.stdout.removeprefix("ruff ").rstrip("\n")
-        )
+        version = Version(ruff_version_process.stdout.removeprefix("ruff ").rstrip("\n"))
         logger.debug(f"ruff {version=!s}")
     except InvalidVersion as e:
         logger.error(f"cannot parse version {version}")
