@@ -32,13 +32,9 @@ class Violation(NamedTuple):
 
     def to_github_annotation(self: "Violation") -> str:
         relativized_path = self.path.relative_to(Path.cwd())
-        first_part = f"::error title=Ruff ({self.error_code}),file={self.path},line={self.line_start},"
-        "col={self.column_start},endLine={self.line_end},endColumn={self.column_end}::"
-
-        second_part = f"{relativized_path}:{self.line_start}:"
-        if self.column_start:
-            second_part += f"{self.column_start}:"
-        return f"{first_part}{second_part} {self.error_code} {self.message}"
+        first_part = f"::error title=Ruff ({self.error_code}),file={self.path},line={self.line_start},col={self.column_start},endLine={self.line_end},endColumn={self.column_end}::"
+        second_part = f"{relativized_path}:{self.line_start}:{self.column_start}: {self.error_code} {self.message}"
+        return first_part + second_part
 
     @staticmethod
     def parse(raw: dict) -> "Violation":
