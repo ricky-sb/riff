@@ -50,12 +50,7 @@ def parse_git_modified_lines(
         Returns:
             set[int]: A set of line indices that have been added with non-empty content.
         """
-        return {
-            line.target_line_no
-            for hunk in patched_file
-            for line in hunk
-            if line.is_added and line.value.strip()
-        }
+        return {line.target_line_no for hunk in patched_file for line in hunk if line.is_added and line.value.strip()}
 
     repo = Repo(search_parent_directories=True)
     repo_root = Path(repo.git_dir).parent
@@ -74,17 +69,12 @@ def parse_git_modified_lines(
         logger.debug(
             "modified lines:\n"
             + pprint.pformat(
-                {
-                    str(file): sorted(changed_lines)
-                    for file, changed_lines in result.items()
-                },
+                {str(file): sorted(changed_lines) for file, changed_lines in result.items()},
                 compact=True,
             )
         )
     else:
-        logger.warning(
-            f"could not find any git-modified lines in {repo_root}: Are the files committed?"
-        )
+        logger.warning(f"could not find any git-modified lines in {repo_root}: Are the files committed?")
     return result
 
 
